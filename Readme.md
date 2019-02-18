@@ -118,6 +118,47 @@ If you need to add prefix, you can add `prefix` field in the configuration file.
   }
 }
 ```
+You can also put prefix in the environment variables. It really useful if you have multiple server environments (DEV, STAGING, PROD, etc.) and each enviroment have different prefix. To achive that, you have to add prefix in enviroment variable begin with `PIPA_GATEWAY_PREFIX_`. 
+Example:
+```bash
+PIPA_GATEWAY_PREFIX_EXAMPLE=/example
+```
+```json
+{
+  "domain": {
+    "sample": "http://example.com" 
+  },
+  "prefix": "${prefix.go_example}",
+  "routes": {
+    "GET /users": {
+      "type": "proxy",
+      "service":
+        {
+          "name": "users",
+          "url": "https://jsonplaceholder.typicode.com/users"
+        }
+    }
+  }
+}
+```
+
+### Set `domain` from Enviroment Variables
+In a real world, you may need to have multiple server enviroments (DEV, STAGING, PROD, etc.)
+If we define the `domain` inside the `json file`, we can only have 1 enviroment.
+So, to cater the issue, you have to define the `domain` in the `enviroment variables` instead.
+
+Every environment variable which starts with `PIPA_GATEWAY_DOMAIN_` will be added to `domain` object. 
+
+Example of `.env` file:
+```bash
+const domainObject = {
+  "PIPA_GATEWAY_DOMAIN_SAMPLE": "http://example.com",
+  "PIPA_GATEWAY_DOMAIN_TESTING": "http://testing.com"
+}  
+```
+
+Note: if you defined `domain` both in the `json file` and `environment variables`, the one defined in `json file` will be replaced. 
+
 
 ### Code Example
 
